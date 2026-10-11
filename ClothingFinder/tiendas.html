@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Maquetación estática de ClothingFinder">
+  <title>Tiendas | ClothingFinder</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --azul: #102748;
+      --azul2: #087ff5;
+      --fondo: #f1f2f6;
+      --texto: #172337;
+      --suave: #8a93a2;
+      --borde: #e5e8ee;
+      --verde: #16a36a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--fondo);
+      font-family: Inter, Arial, sans-serif;
+      font-size: 13px;
+      color: var(--texto);
+    }
+    .barra {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 218px;
+      height: 100vh;
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 18px;
+      background: var(--azul);
+      z-index: 1040;
+      overflow-y: auto;
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 5px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .marca:hover {
+      color: #fff;
+    }
+
+    .marca-icono {
+      width: 25px;
+      height: 25px;
+      border-radius: 6px;
+      background: #0788ff;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .logo-svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .nav-principal {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 5px;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .nav-principal .nav-link {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 6px;
+      color: #c6d2e2;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .nav-principal .nav-link:hover,
+    .nav-principal .nav-link.active {
+      background: #263f62;
+      color: #fff;
+    }
+
+    .nav-principal .submenu {
+      background: #142e50;
+      border-radius: 9px;
+      margin: 2px 0 7px;
+      padding: 4px 0;
+    }
+
+    .nav-principal .submenu a {
+      display: block;
+      padding: 10px 13px 10px 30px;
+      border-radius: 6px;
+      color: #d9e2ef;
+      font-size: 11px;
+      text-decoration: none;
+    }
+
+    .nav-principal .submenu a:hover {
+      background: #263f62;
+      color: #fff;
+    }
+
+    .nav-principal [data-bs-toggle="collapse"] {
+      cursor: pointer;
+    }
+
+    .nav-principal [data-bs-toggle="collapse"]:focus {
+      outline: none;
+    }
+    .contenido {
+      min-height: 100vh;
+      margin-left: 218px;
+      padding: 24px 26px 35px;
+    }
+
+    .encabezado {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid #e7e9ee;
+    }
+
+    .encabezado h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -.3px;
+    }
+
+    .subtitulo,
+    .muted {
+      color: var(--suave);
+    }
+
+    .subtitulo {
+      margin: 0;
+      font-size: 11px;
+    }
+
+    .btn {
+      font-size: 11px;
+      border-radius: 5px;
+      transition: all .15s ease;
+    }
+
+    .btn-azul {
+      background: var(--azul2);
+      border-color: var(--azul2);
+      color: #fff;
+    }
+
+    .btn-azul:hover {
+      background: #066bd0;
+      border-color: #066bd0;
+      color: #fff;
+    }
+
+    .tarjeta {
+      margin-bottom: 16px;
+      padding: 17px;
+      border: 0;
+      border-radius: 9px;
+      background: #fff;
+      box-shadow: 0 1px 3px #1723370a;
+    }
+
+    .tarjeta h2,
+    .tarjeta h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .tabla-cabecera {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+
+    .etiqueta {
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: #eef3fa;
+      color: #65738a;
+      font-size: 10px;
+    }
+    .tabla-filtros {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tabla-filtros .form-control,
+    .tabla-filtros .form-select {
+      max-width: 200px;
+    }
+
+    .form-label {
+      margin-bottom: 5px;
+      color: #38465b;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .form-control,
+    .form-select {
+      padding: 8px 10px;
+      border-color: #e0e4eb;
+      border-radius: 5px;
+      font-size: 11px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #91a8c8;
+      box-shadow: 0 0 0 .2rem #25467516;
+    }
+    .table {
+      font-size: 11px;
+      vertical-align: middle;
+    }
+
+    .table thead th {
+      background: #fff;
+      color: #7e8999;
+      font-size: 9px;
+      letter-spacing: .25px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-bottom: 1px solid #e7e9ee;
+    }
+
+    .table td {
+      padding-top: 11px;
+      padding-bottom: 11px;
+      border-color: #eef0f4;
+    }
+
+    .table-hover > tbody > tr:hover > * {
+      --bs-table-bg-state: #f8faff;
+    }
+
+    .table td:last-child {
+      min-width: 190px;
+    }
+
+    .acciones-tabla {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      min-width: 170px;
+    }
+
+    .acciones-tabla .btn {
+      padding: 5px 9px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .badge-estado {
+      display: inline-block;
+      padding: 4px 7px;
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 600;
+    }
+
+    .estado-ok {
+      background: #e6f6ee;
+      color: #13734d;
+    }
+
+    .estado-pendiente {
+      background: #fff5dc;
+      color: #9a6700;
+    }
+
+    .estado-bloqueado {
+      background: #fdebed;
+      color: #b42332;
+    }
+
+    .pie {
+      margin-left: 218px;
+      padding: 15px 30px;
+      color: #8a95a8;
+      font-size: 12px;
+      text-align: center;
+    }
+    .dropdown-menu {
+      padding: 7px;
+      border: 1px solid var(--borde);
+      border-radius: 11px;
+      box-shadow: 0 10px 28px #172b4d18;
+      font-size: 11px;
+    }
+
+    .dropdown-item {
+      padding: 9px 12px;
+      border-radius: 7px;
+      font-size: 13px;
+    }
+
+    .dropdown-item:active {
+      background: var(--azul);
+    }
+
+    .usuario-menu {
+      display: none !important;
+    }
+
+    .navbar-toggler {
+      display: none;
+      border: 1px solid var(--borde);
+    }
+    @media (max-width: 900px) {
+      .barra {
+        width: 180px;
+      }
+
+      .contenido {
+        margin-left: 180px;
+        padding: 20px 14px;
+      }
+
+      .pie {
+        margin-left: 180px;
+      }
+
+      .tabla-cabecera {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .barra {
+        width: 68px;
+        padding: 15px 7px;
+      }
+
+      .barra .marca span:not(.marca-icono) {
+        display: none;
+      }
+
+      .nav-principal .nav-link {
+        justify-content: center;
+        padding: 8px;
+        font-size: 11px;
+      }
+
+      .nav-principal .nav-link span {
+        display: none;
+      }
+
+      .nav-principal .submenu {
+        padding: 2px;
+      }
+
+      .nav-principal .submenu a {
+        padding: 8px 4px;
+        font-size: 10px;
+        overflow-wrap: anywhere;
+      }
+
+      .contenido {
+        margin-left: 68px;
+        padding: 18px 10px;
+      }
+
+      .pie {
+        margin-left: 68px;
+        padding: 12px 8px;
+      }
+
+      .encabezado {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .tarjeta {
+        padding: 13px;
+      }
+
+      .tabla-cabecera {
+        flex-direction: column;
+      }
+
+      .tabla-filtros {
+        flex-direction: column;
+      }
+
+      .tabla-filtros .form-control,
+      .tabla-filtros .form-select {
+        max-width: 100%;
+      }
+
+      .acciones-tabla {
+        min-width: 150px;
+      }
+    }
+  </style>
+</head>
+
+<body data-pagina="tiendas">
+
+  <nav class="barra">
+    <a class="marca" href="index.html">
+      <span class="marca-icono">
+        <svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.5 8.5h11l.8 11h-12.6l.8-11Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M9 8.5V6.8a3 3 0 0 1 6 0v1.7M9.5 12.2l2.5 2.2 2.5-2.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span>ClothingFinder</span>
+    </a>
+
+    <div class="nav-principal">
+      <a class="nav-link" href="index.html">▦ &nbsp; Dashboard</a>
+
+      <a class="nav-link" data-bs-toggle="collapse" href="#menuUsuarios" role="button" aria-expanded="false" aria-controls="menuUsuarios">
+        ♙ &nbsp; Usuarios <span class="ms-auto">⌄</span>
+      </a>
+      <div class="collapse" id="menuUsuarios">
+        <div class="submenu">
+          <a href="usuarios.html">Listado de usuarios</a>
+          <a href="registro.html">Registrar usuario</a>
+        </div>
+      </div>
+
+      <a class="nav-link active" data-bs-toggle="collapse" href="#menuCatalogo" role="button" aria-expanded="true" aria-controls="menuCatalogo">
+        ▣ &nbsp; Catálogo <span class="ms-auto">⌄</span>
+      </a>
+      <div class="collapse show" id="menuCatalogo">
+        <div class="submenu">
+          <a href="tiendas.html">Tiendas</a>
+          <a href="productos.html">Productos</a>
+        </div>
+      </div>
+
+      <a class="nav-link" href="resenas.html">☆ &nbsp; Reseñas</a>
+      <a class="nav-link" href="reportes.html">▥ &nbsp; Reportes</a>
+
+      <a class="nav-link" data-bs-toggle="collapse" href="#menuSistema" role="button" aria-expanded="false" aria-controls="menuSistema">
+        ⚙ &nbsp; Sistema <span class="ms-auto">⌄</span>
+      </a>
+      <div class="collapse" id="menuSistema">
+        <div class="submenu">
+          <a href="auditoria.html">Auditoría y respaldos</a>
+          <a href="configuracion.html">Configuración</a>
+        </div>
+      </div>
+
+      <a class="nav-link" href="login.html">↪ &nbsp; Cerrar sesión</a>
+    </div>
+  </nav>
+
+  <main id="contenido" class="contenido">
+    <div class="encabezado">
+      <div>
+        <h1>Tiendas</h1>
+        <p class="subtitulo">Administra los puntos de venta registrados.</p>
+      </div>
+      <a class="btn btn-azul" href="#registro-tienda">＋ &nbsp; Nueva tienda</a>
+    </div>
+
+    <section class="tarjeta">
+      <div class="tabla-cabecera">
+        <div>
+          <h2>Listado de tiendas</h2>
+          <span class="muted">Tiendas dentro del Valle de Aburrá</span>
+        </div>
+        <span class="etiqueta">128 establecimientos</span>
+      </div>
+
+      <div class="tabla-filtros mb-3">
+        <select class="form-select">
+          <option>Todos los estados</option>
+          <option>Verificada</option>
+          <option>Pendiente</option>
+          <option>Bloqueada</option>
+        </select>
+
+        <select class="form-select">
+          <option>Todos los municipios</option>
+          <option>Medellín</option>
+          <option>Bello</option>
+          <option>Itagüí</option>
+          <option>Envigado</option>
+          <option>Sabaneta</option>
+          <option>La Estrella</option>
+          <option>Caldas</option>
+          <option>Copacabana</option>
+          <option>Girardota</option>
+          <option>Barbosa</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover w-100">
+          <thead>
+            <tr>
+              <th>Tienda</th>
+              <th>Propietario</th>
+              <th>Contacto</th>
+              <th>Categoría</th>
+              <th>Municipio</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Urban Style</td>
+              <td>Laura Gómez</td>
+              <td>urban@correo.com</td>
+              <td>Urbana</td>
+              <td>Medellín</td>
+              <td><span class="badge-estado estado-ok">Verificada</span></td>
+              <td class="acciones-tabla text-nowrap">
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaVer">Ver</button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaEditar">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaBorrar">Borrar</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Sport House</td>
+              <td>Carlos Ruiz</td>
+              <td>sport@correo.com</td>
+              <td>Deportiva</td>
+              <td>Envigado</td>
+              <td><span class="badge-estado estado-pendiente">Pendiente</span></td>
+              <td class="acciones-tabla text-nowrap">
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaVer2">Ver</button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaEditar2">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaBorrar2">Borrar</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Moda Viva</td>
+              <td>Ana Torres</td>
+              <td>moda@correo.com</td>
+              <td>Casual</td>
+              <td>Itagüí</td>
+              <td><span class="badge-estado estado-ok">Verificada</span></td>
+              <td class="acciones-tabla text-nowrap">
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaVer3">Ver</button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaEditar3">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaBorrar3">Borrar</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Kids Zone</td>
+              <td>Pedro Díaz</td>
+              <td>kids@correo.com</td>
+              <td>Infantil</td>
+              <td>Bello</td>
+              <td><span class="badge-estado estado-bloqueado">Bloqueada</span></td>
+              <td class="acciones-tabla text-nowrap">
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaVer4">Ver</button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaEditar4">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaBorrar4">Borrar</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Active Wear</td>
+              <td>Sara López</td>
+              <td>active@correo.com</td>
+              <td>Deportiva</td>
+              <td>Sabaneta</td>
+              <td><span class="badge-estado estado-ok">Verificada</span></td>
+              <td class="acciones-tabla text-nowrap">
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaVer5">Ver</button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaEditar5">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tiendaBorrar5">Borrar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tarjeta" id="registro-tienda">
+      <h2>Registrar tienda</h2>
+      <form>
+        <div class="mb-3">
+          <label class="form-label">Nombre de la tienda</label>
+          <input class="form-control" type="text" placeholder="Nombre comercial">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Propietario</label>
+          <input class="form-control" type="text" placeholder="Nombre completo">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Correo electrónico</label>
+          <input class="form-control" type="email" placeholder="tienda@correo.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Teléfono</label>
+          <input class="form-control" type="tel" placeholder="604 000 0000">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Municipio</label>
+          <select class="form-select">
+            <option>Medellín</option>
+            <option>Envigado</option>
+            <option>Itagüí</option>
+            <option>Bello</option>
+            <option>Sabaneta</option>
+            <option>La Estrella</option>
+            <option>Copacabana</option>
+            <option>Girardota</option>
+            <option>Barbosa</option>
+            <option>Caldas</option>
+          </select>
+        </div>
+        <button class="btn btn-azul" type="button">Guardar</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="pie">ClothingFinder · Encuentra tiendas de ropa cerca de ti · Valle de Aburrá</footer>
+  <div class="modal fade" id="tiendaVer" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> Urban Style</p>
+          <p><strong>Propietario:</strong> Laura Gómez</p>
+          <p><strong>Contacto:</strong> urban@correo.com</p>
+          <p><strong>Categoría:</strong> Urbana</p>
+          <p><strong>Municipio:</strong> Medellín</p>
+          <p><strong>Estado:</strong> Verificada</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaEditar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control mb-2" value="Urban Style">
+            <label class="form-label">Propietario</label>
+            <input type="text" class="form-control mb-2" value="Laura Gómez">
+            <label class="form-label">Contacto</label>
+            <input type="email" class="form-control mb-2" value="urban@correo.com">
+            <label class="form-label">Categoría</label>
+            <input type="text" class="form-control mb-2" value="Urbana">
+            <label class="form-label">Municipio</label>
+            <input type="text" class="form-control mb-2" value="Medellín">
+            <label class="form-label">Estado</label>
+            <select class="form-select mb-3">
+              <option selected>Verificada</option>
+              <option>Pendiente</option>
+              <option>Bloqueada</option>
+            </select>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaBorrar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">¿Estás seguro de que deseas eliminar la tienda Urban Style?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="tiendaVer2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> Sport House</p>
+          <p><strong>Propietario:</strong> Carlos Ruiz</p>
+          <p><strong>Contacto:</strong> sport@correo.com</p>
+          <p><strong>Categoría:</strong> Deportiva</p>
+          <p><strong>Municipio:</strong> Envigado</p>
+          <p><strong>Estado:</strong> Pendiente</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaEditar2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control mb-2" value="Sport House">
+            <label class="form-label">Propietario</label>
+            <input type="text" class="form-control mb-2" value="Carlos Ruiz">
+            <label class="form-label">Contacto</label>
+            <input type="email" class="form-control mb-2" value="sport@correo.com">
+            <label class="form-label">Categoría</label>
+            <input type="text" class="form-control mb-2" value="Deportiva">
+            <label class="form-label">Municipio</label>
+            <input type="text" class="form-control mb-2" value="Envigado">
+            <label class="form-label">Estado</label>
+            <select class="form-select mb-3">
+              <option selected>Pendiente</option>
+              <option>Verificada</option>
+              <option>Bloqueada</option>
+            </select>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaBorrar2" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">¿Estás seguro de que deseas eliminar la tienda Sport House?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="tiendaVer3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> Moda Viva</p>
+          <p><strong>Propietario:</strong> Ana Torres</p>
+          <p><strong>Contacto:</strong> moda@correo.com</p>
+          <p><strong>Categoría:</strong> Casual</p>
+          <p><strong>Municipio:</strong> Itagüí</p>
+          <p><strong>Estado:</strong> Verificada</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaEditar3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control mb-2" value="Moda Viva">
+            <label class="form-label">Propietario</label>
+            <input type="text" class="form-control mb-2" value="Ana Torres">
+            <label class="form-label">Contacto</label>
+            <input type="email" class="form-control mb-2" value="moda@correo.com">
+            <label class="form-label">Categoría</label>
+            <input type="text" class="form-control mb-2" value="Casual">
+            <label class="form-label">Municipio</label>
+            <input type="text" class="form-control mb-2" value="Itagüí">
+            <label class="form-label">Estado</label>
+            <select class="form-select mb-3">
+              <option selected>Verificada</option>
+              <option>Pendiente</option>
+              <option>Bloqueada</option>
+            </select>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaBorrar3" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">¿Estás seguro de que deseas eliminar la tienda Moda Viva?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="tiendaVer4" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> Kids Zone</p>
+          <p><strong>Propietario:</strong> Pedro Díaz</p>
+          <p><strong>Contacto:</strong> kids@correo.com</p>
+          <p><strong>Categoría:</strong> Infantil</p>
+          <p><strong>Municipio:</strong> Bello</p>
+          <p><strong>Estado:</strong> Bloqueada</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaEditar4" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control mb-2" value="Kids Zone">
+            <label class="form-label">Propietario</label>
+            <input type="text" class="form-control mb-2" value="Pedro Díaz">
+            <label class="form-label">Contacto</label>
+            <input type="email" class="form-control mb-2" value="kids@correo.com">
+            <label class="form-label">Categoría</label>
+            <input type="text" class="form-control mb-2" value="Infantil">
+            <label class="form-label">Municipio</label>
+            <input type="text" class="form-control mb-2" value="Bello">
+            <label class="form-label">Estado</label>
+            <select class="form-select mb-3">
+              <option selected>Bloqueada</option>
+              <option>Verificada</option>
+              <option>Pendiente</option>
+            </select>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaBorrar4" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">¿Estás seguro de que deseas eliminar la tienda Kids Zone?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="tiendaVer5" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> Active Wear</p>
+          <p><strong>Propietario:</strong> Sara López</p>
+          <p><strong>Contacto:</strong> active@correo.com</p>
+          <p><strong>Categoría:</strong> Deportiva</p>
+          <p><strong>Municipio:</strong> Sabaneta</p>
+          <p><strong>Estado:</strong> Verificada</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaEditar5" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control mb-2" value="Active Wear">
+            <label class="form-label">Propietario</label>
+            <input type="text" class="form-control mb-2" value="Sara López">
+            <label class="form-label">Contacto</label>
+            <input type="email" class="form-control mb-2" value="active@correo.com">
+            <label class="form-label">Categoría</label>
+            <input type="text" class="form-control mb-2" value="Deportiva">
+            <label class="form-label">Municipio</label>
+            <input type="text" class="form-control mb-2" value="Sabaneta">
+            <label class="form-label">Estado</label>
+            <select class="form-select mb-3">
+              <option selected>Verificada</option>
+              <option>Pendiente</option>
+              <option>Bloqueada</option>
+            </select>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="tiendaBorrar5" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar tienda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">¿Estás seguro de que deseas eliminar la tienda Active Wear?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+    document.querySelectorAll("table").forEach(function (tabla) {
+      new DataTable(tabla, {
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-ES.json"
+        },
+        pageLength: 5,
+        lengthMenu: [5, 10, 25]
+      });
+    });
+  </script>
+
+</body>
+</html>
