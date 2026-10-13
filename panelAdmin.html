@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel principal | ClothingFinder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --azul: #102748;
+      --azul-claro: #087ff5;
+      --fondo: #f1f2f6;
+      --texto: #172337;
+      --suave: #8a93a2;
+      --borde: #e5e8ee;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+    }
+    .barra {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 218px;
+      padding: 20px 12px;
+      background: var(--azul);
+      overflow-y: auto;
+      z-index: 1000;
+    }
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 5px;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .marca-icono {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--azul-claro);
+    }
+    .logo-svg {
+      width: 21px;
+      height: 21px;
+    }
+    .nav-principal {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 25px;
+    }
+    .nav-principal .nav-link {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      color: #c6d2e2;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .nav-principal .nav-link:hover,
+    .nav-principal .nav-link.active {
+      background: #263f62;
+      color: white;
+    }
+    .submenu {
+      margin: 2px 0 7px;
+      padding: 4px;
+      border-radius: 8px;
+      background: #142e50;
+    }
+    .submenu a {
+      display: block;
+      padding: 9px 10px 9px 28px;
+      border-radius: 6px;
+      color: #d9e2ef;
+      font-size: 11px;
+      text-decoration: none;
+    }
+    .submenu a:hover {
+      background: #263f62;
+      color: white;
+    }
+    .contenido {
+      min-height: 100vh;
+      margin-left: 218px;
+      padding: 25px;
+    }
+    .encabezado {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--borde);
+    }
+    .encabezado h1 {
+      margin: 0 0 5px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .subtitulo,
+    .muted {
+      color: var(--suave);
+    }
+    .subtitulo {
+      margin: 0;
+      font-size: 11px;
+    }
+    .btn {
+      border-radius: 5px;
+      font-size: 11px;
+    }
+    .btn-azul {
+      background: var(--azul-claro);
+      color: white;
+    }
+    .btn-azul:hover {
+      background: #066bd0;
+      color: white;
+    }
+    .metricas {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .metrica,
+    .tarjeta {
+      padding: 17px;
+      border-radius: 9px;
+      background: white;
+      box-shadow: 0 1px 3px #1723370a;
+    }
+    .metrica-arriba {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: #75839a;
+    }
+    .metrica-icono {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: #eaf3ff;
+      color: var(--azul-claro);
+    }
+    .metrica strong {
+      display: block;
+      margin: 9px 0 2px;
+      font-size: 24px;
+    }
+    .positivo {
+      color: #16a36a;
+      font-size: 11px;
+    }
+    .grid-dos {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 15px;
+    }
+    .tarjeta {
+      min-width: 0;
+      margin-bottom: 16px;
+    }
+    .tarjeta h2 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .tabla-cabecera {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .grafico-estatico {
+      display: flex;
+      align-items: end;
+      gap: 12px;
+      height: 185px;
+      padding: 15px 8px 0;
+      border-bottom: 1px solid var(--borde);
+    }
+    .barra-grafico {
+      position: relative;
+      flex: 1;
+      min-width: 12px;
+      border-radius: 5px 5px 0 0;
+      background: var(--azul-claro);
+    }
+    .barra-grafico span {
+      position: absolute;
+      right: 0;
+      bottom: -23px;
+      left: 0;
+      color: #7d8798;
+      font-size: 10px;
+      text-align: center;
+    }
+    .pastel-estatico {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .pastel-estatico span {
+      padding: 7px 10px;
+      border-radius: 6px;
+      background: #eaf3ff;
+      color: #315aa6;
+      font-size: 11px;
+    }
+    .table {
+      margin-bottom: 0;
+      font-size: 11px;
+      vertical-align: middle;
+    }
+    .table thead th {
+      background: white;
+      color: #7e8999;
+      font-size: 9px;
+      letter-spacing: .25px;
+      white-space: nowrap;
+    }
+    .table td {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+    .badge-estado {
+      display: inline-block;
+      padding: 4px 7px;
+      border-radius: 20px;
+      font-size: 9px;
+    }
+    .estado-ok {
+      background: #e6f6ee;
+      color: #13734d;
+    }
+    .estado-pendiente {
+      background: #fff5dc;
+      color: #9a6700;
+    }
+    .pie {
+      margin-left: 218px;
+      padding: 15px;
+      color: var(--suave);
+      font-size: 11px;
+      text-align: center;
+    }
+    @media (max-width: 1000px) {
+      .metricas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-dos {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .barra {
+        width: 68px;
+        padding: 15px 6px;
+      }
+
+      .marca {
+        justify-content: center;
+        padding: 0;
+      }
+
+      .marca > span:last-child {
+        display: none;
+      }
+
+      .nav-principal .nav-link {
+        justify-content: center;
+        padding: 10px 2px;
+        font-size: 10px;
+      }
+
+      .nav-principal .nav-link span {
+        display: none;
+      }
+
+      .submenu {
+        padding: 2px;
+      }
+
+      .submenu a {
+        padding: 7px 3px;
+        font-size: 10px;
+        overflow-wrap: anywhere;
+      }
+
+      .contenido {
+        margin-left: 68px;
+        padding: 18px 10px;
+      }
+
+      .pie {
+        margin-left: 68px;
+        padding: 12px 5px;
+      }
+
+      .encabezado {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .encabezado h1 {
+        font-size: 19px;
+      }
+
+      .metricas {
+        gap: 8px;
+      }
+
+      .metrica {
+        padding: 12px 9px;
+      }
+
+      .metrica strong {
+        font-size: 21px;
+      }
+
+      .metrica-arriba {
+        font-size: 10px;
+      }
+
+      .tarjeta {
+        padding: 12px;
+      }
+
+      .tabla-cabecera {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="barra">
+    <a class="marca" href="index.html">
+      <span class="marca-icono">
+        <svg class="logo-svg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.5 8.5h11l.8 11h-12.6l.8-11Z" fill="none" stroke="currentColor" stroke-width="1.7"
+            stroke-linejoin="round" />
+          <path d="M9 8.5V6.8a3 3 0 0 1 6 0v1.7M9.5 12.2l2.5 2.2 2.5-2.2" fill="none"
+            stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span>ClothingFinder</span>
+    </a>
+
+    <div class="nav-principal">
+      <a class="nav-link" href="index.html">▦ &nbsp; Dashboard</a>
+
+      <a class="nav-link" data-bs-toggle="collapse" href="#menuUsuarios" role="button"
+        aria-expanded="false" aria-controls="menuUsuarios">
+        ♙ &nbsp; Usuarios <span class="ms-auto">⌄</span>
+      </a>
+      <div class="collapse" id="menuUsuarios">
+        <div class="submenu">
+          <a href="usuarios.html">Listado de usuarios</a>
+          <a href="registro.html">Registrar usuario</a>
+        </div>
+      </div>
+
+      <a class="nav-link" data-bs-toggle="collapse" href="#menuCatalogo" role="button"
+        aria-expanded="false" aria-controls="menuCatalogo">
+        ▣ &nbsp; Catálogo <span class="ms-auto">⌄</span>
+      </a>
+      <div class="collapse" id="menuCatalogo">
+        <div class="submenu">
+          <a href="tiendas.html">Tiendas</a>
+          <a href="productos.html">Productos</a>
+        </div>
+      </div>
+
+      <a class="nav-link" href="resenas.html">☆ &nbsp; Reseñas</a>
+      <a class="nav-link" href="reportes.html">▥ &nbsp; Reportes</a>
+
+      <a class="nav-link" data-bs-toggle="collapse" href="#menuSistema" role="button"
+        aria-expanded="false" aria-controls="menuSistema">
+        ⚙ &nbsp; Sistema <span class="ms-auto">⌄</span>
+      </a>
+      <div class="collapse" id="menuSistema">
+        <div class="submenu">
+          <a href="auditoria.html">Auditoría y respaldos</a>
+          <a href="configuracion.html">Configuración</a>
+        </div>
+      </div>
+
+      <a class="nav-link" href="landing.html">↪ &nbsp; Cerrar sesión</a>
+    </div>
+  </nav>
+
+  <main id="contenido" class="contenido">
+    <div class="encabezado">
+      <div>
+        <h1>¡Bienvenido al panel!</h1>
+        <p class="subtitulo">Aquí tienes un resumen de la actividad de ClothingFinder.</p>
+      </div>
+      <button class="btn btn-outline-secondary" type="button">⇩ &nbsp; Exportar resumen</button>
+    </div>
+
+    <div class="metricas">
+      <div class="metrica">
+        <div class="metrica-arriba">
+          <span>Tiendas registradas</span><span class="metrica-icono">▣</span>
+        </div>
+        <strong>128</strong>
+        <span class="positivo">↑ 12% este mes</span>
+      </div>
+
+      <div class="metrica">
+        <div class="metrica-arriba">
+          <span>Usuarios activos</span><span class="metrica-icono">♙</span>
+        </div>
+        <strong>1.284</strong>
+        <span class="positivo">↑ 8,4% este mes</span>
+      </div>
+
+      <div class="metrica">
+        <div class="metrica-arriba">
+          <span>Productos publicados</span><span class="metrica-icono">▤</span>
+        </div>
+        <strong>846</strong>
+        <span class="positivo">↑ 5,2% este mes</span>
+      </div>
+
+      <div class="metrica">
+        <div class="metrica-arriba">
+          <span>Reseñas recibidas</span><span class="metrica-icono">☆</span>
+        </div>
+        <strong>392</strong>
+        <span class="positivo">↑ 18 nuevas esta semana</span>
+      </div>
+    </div>
+
+    <div class="grid-dos">
+      <section class="tarjeta">
+        <div class="tabla-cabecera">
+          <div>
+            <h2>Actividad de la plataforma</h2>
+            <span class="muted">Resumen de los últimos 6 meses</span>
+          </div>
+          <span>2026</span>
+        </div>
+
+        <div class="grafico-estatico">
+          <div class="barra-grafico" style="height:36%"><span>May</span></div>
+          <div class="barra-grafico" style="height:48%"><span>Jun</span></div>
+          <div class="barra-grafico" style="height:43%"><span>Jul</span></div>
+          <div class="barra-grafico" style="height:64%"><span>Ago</span></div>
+          <div class="barra-grafico" style="height:77%"><span>Sep</span></div>
+          <div class="barra-grafico" style="height:92%"><span>Oct</span></div>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Tiendas por categoría</h2>
+        <span class="muted">Distribución del catálogo</span>
+
+        <div class="pastel-estatico">
+          <span>Casual · 35%</span>
+          <span>Deportiva · 25%</span>
+          <span>Urbana · 20%</span>
+          <span>Formal · 12%</span>
+          <span>Infantil · 8%</span>
+        </div>
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <div class="tabla-cabecera">
+        <div>
+          <h2>Tiendas recientes</h2>
+          <span class="muted">Últimos establecimientos registrados</span>
+        </div>
+        <a class="btn btn-outline-secondary btn-sm" href="tiendas.html">Ver todas</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Tienda</th>
+              <th>Categoría</th>
+              <th>Municipio</th>
+              <th>Estado</th>
+              <th>Fecha de registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Urban Style Medellín</td>
+              <td>Urbana</td>
+              <td>Medellín</td>
+              <td><span class="badge-estado estado-ok">Verificada</span></td>
+              <td>10 oct. 2026</td>
+            </tr>
+            <tr>
+              <td>Sport House</td>
+              <td>Deportiva</td>
+              <td>Envigado</td>
+              <td><span class="badge-estado estado-pendiente">Pendiente</span></td>
+              <td>09 oct. 2026</td>
+            </tr>
+            <tr>
+              <td>Moda Viva</td>
+              <td>Casual</td>
+              <td>Itagüí</td>
+              <td><span class="badge-estado estado-ok">Verificada</span></td>
+              <td>08 oct. 2026</td>
+            </tr>
+            <tr>
+              <td>Kids Zone</td>
+              <td>Infantil</td>
+              <td>Bello</td>
+              <td><span class="badge-estado estado-ok">Verificada</span></td>
+              <td>07 oct. 2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    ClothingFinder · Encuentra tiendas de ropa cerca de ti · Valle de Aburrá
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
